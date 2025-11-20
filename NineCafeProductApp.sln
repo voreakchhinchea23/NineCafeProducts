@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NineCafeProductAppV1", "NineCafeProductAppV1\NineCafeProductAppV1.csproj", "{DC9EB2E6-186B-494A-B1DA-E21E9E3687E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NineCafeProductAppV1.Tests", "NineCafeProductAppV1.Tests\NineCafeProductAppV1.Tests.csproj", "{32B6C4E5-6047-40E3-ADC6-E726972EF752}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC9EB2E6-186B-494A-B1DA-E21E9E3687E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC9EB2E6-186B-494A-B1DA-E21E9E3687E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC9EB2E6-186B-494A-B1DA-E21E9E3687E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC9EB2E6-186B-494A-B1DA-E21E9E3687E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32B6C4E5-6047-40E3-ADC6-E726972EF752}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32B6C4E5-6047-40E3-ADC6-E726972EF752}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32B6C4E5-6047-40E3-ADC6-E726972EF752}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32B6C4E5-6047-40E3-ADC6-E726972EF752}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {006741E4-AA99-4234-868C-4561C4103403}
+	EndGlobalSection
+EndGlobal

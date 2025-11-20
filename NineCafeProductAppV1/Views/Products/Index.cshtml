@@ -1,0 +1,411 @@
+﻿@model IEnumerable<ProductPosting>
+@using NineCafeProductAppV1.Constants;
+@{
+    ViewData["Title"] = "Products";
+}
+
+<h1 class="text-center py-4">Welcome to Nine Café</h1>
+
+<div class="container py-4">
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <p class="text-muted">No products available yet.</p>
+            <a href="https://www.foodpanda.com.kh/en/restaurant/q0xf/nine-cafe-tuol-sangke"
+               target="_blank"
+               class="btn btn-outline-primary">Find us on FoodPanda</a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-3">
+            @{
+                var products = Model.Where(p => p.IsActive).ToArray();
+                for (int i = 0; i < products.Length; i += 2)
+                {
+                    <div class="col-12 col-md-6">
+                        <div class="d-flex flex-column gap-3">
+                            <!--First Item-->
+                            @if (i < products.Length)
+                            {
+                                var product1 = products[i];
+                                <div class="menu-item animate__animated animate__fadeInUp"
+                                     style="opacity: 0;"
+                                     data-aos-delay="@(i * 100)">
+
+                                    <div class="d-flex align-items-start p-3 border rounded-3 shadow-sm"
+                                         style="background: white; transition: all 0.3s ease;">
+                                        <!--Text context-->
+                                        <div class="flex-grow-1 me-3">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <h5 class="mb-1 fw-bold">@product1.Title</h5>
+                                                    <p class="text-danger mb-2 fw-bold">$@product1.Price.ToString("F2")</p>
+                                                    <p class="text-secondary mb-1" style="font-size: 0.85rem; font-weight: 600;">
+                                                        <span class="badge bg-light text-secondary">@product1.Category</span>
+                                                    </p>
+                                                    <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                                        @if (!string.IsNullOrEmpty(product1.Description))
+                                                        {
+                                                            @(product1.Description.Length > 80 ? product1.Description.Substring(0, 80) + "..." : product1.Description)
+                                                        }
+                                                    </p>
+                                                </div>
+                                                <!-- Action Buttons -->
+                                                <div class="d-flex flex-column gap-2">
+                                                    <!--Foodpanda-->
+                                                    @if (!string.IsNullOrEmpty(product1.FoodPandaUrl))
+                                                    {
+                                                        <a href="@product1.FoodPandaUrl"
+                                                           target="_blank"
+                                                           class="btn-add animate__animated animate__pulse"
+                                                           aria-label="Order @product1.Title">
+                                                            <i class="fas fa-plus"></i>
+                                                        </a>
+                                                    }
+                                                    @if (User.IsInRole(Roles.ADMIN))
+                                                    {
+                                                        <a asp-action="Edit" asp-route-id="@product1.Id"
+                                                           class="btn-edit"
+                                                           aria-label="Edit @product1.Title">
+                                                            <i class="fas fa-pen"></i>
+                                                        </a>
+
+                                                        <form asp-action="Delete" asp-route-id="@product1.Id" method="post"
+                                                              onsubmit="return confirm('Delete this product?');"
+                                                              class="d-inline">
+                                                            <button type="submit" class="btn-delete" aria-label="Delete @product1.Title">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    }
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Image -->
+                                        <div class="product-image" style="width: 125px; height: 125px; flex-shrink: 0;">
+                                            @if (!string.IsNullOrEmpty(product1.ImageUrl))
+                                            {
+                                                <img src="@product1.ImageUrl"
+                                                     alt="@product1.Title"
+                                                     class="w-100 h-100 rounded-2"
+                                                     style="object-fit: cover; object-position: center; transition: transform 0.3s ease;" />
+                                            }
+                                            else
+                                            {
+                                                <div class="bg-light d-flex align-items-center justify-content-center w-100 h-100 rounded-2 text-muted">
+                                                    <small>No image</small>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <!--Second Item-->
+                            @if (i + 1 < products.Length)
+                            {
+                                var product2 = products[i + 1];
+                                <div class="menu-item animate__animated animate__fadeInUp"
+                                     style="opacity: 0;"
+                                     data-aos-delay="@( (i + 1) * 100)">
+                                    <div class="d-flex align-items-start p-3 border rounded-3 shadow-sm"
+                                         style="background: white; transition: all 0.3s ease;">
+                                        <!-- Text Content -->
+                                        <div class="flex-grow-1 me-3">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <h5 class="mb-1 fw-bold">@product2.Title</h5>
+                                                    <p class="text-danger mb-2 fw-bold">$@product2.Price.ToString("F2")</p>
+                                                    <!--CATEGORY BADGE -->
+                                                    <p class="text-secondary mb-1" style="font-size: 0.85rem; font-weight: 600;">
+                                                        <span class="badge bg-light text-secondary">@product2.Category</span>
+                                                    </p>
+                                                    <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                                        @if (!string.IsNullOrEmpty(product2.Description))
+                                                        {
+                                                            @(product2.Description.Length > 80 ? product2.Description.Substring(0, 80) + "..." : product2.Description)
+                                                        }
+                                                    </p>
+                                                </div>
+                                                <div class="d-flex flex-column gap-2">
+                                                    @if (!string.IsNullOrEmpty(product2.FoodPandaUrl))
+                                                    {
+                                                        <a href="@product2.FoodPandaUrl"
+                                                           target="_blank"
+                                                           class="btn-add animate__animated animate__pulse"
+                                                           aria-label="Order @product2.Title">
+                                                            <i class="fas fa-plus"></i>
+                                                        </a>
+                                                    }
+                                                    @if (User.IsInRole(Roles.ADMIN))
+                                                    {
+                                                        <a asp-action="Edit" asp-route-id="@product2.Id"
+                                                           class="btn-edit"
+                                                           aria-label="Edit @product2.Title">
+                                                            <i class="fas fa-pen"></i>
+                                                        </a>
+
+                                                        <form asp-action="Delete" asp-route-id="@product2.Id" method="post"
+                                                              onsubmit="return confirm('Delete this product?');"
+                                                              class="d-inline">
+                                                            <button type="submit" class="btn-delete" aria-label="Delete @product2.Title">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Image -->
+                                        <div class="product-image" style="width: 125px; height: 125px; flex-shrink: 0;">
+                                            @if (!string.IsNullOrEmpty(product2.ImageUrl))
+                                            {
+                                                <img src="@product2.ImageUrl"
+                                                     alt="@product2.Title"
+                                                     class="w-100 h-100 rounded-2"
+                                                     style="object-fit: cover; object-position: center; transition: transform 0.3s ease;" />
+                                            }
+                                            else
+                                            {
+                                                <div class="bg-light d-flex align-items-center justify-content-center w-100 h-100 rounded-2 text-muted">
+                                                    <small>No image</small>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+            <!-- Inactive Items (Full Width) -->
+            @if (Model.Any(p => !p.IsActive) && User.IsInRole(Roles.ADMIN))
+            {
+                <div class="col-12 mt-5">
+                    <h5 class="text-muted">Inactive Items</h5>
+                    <div class="row g-3">
+                        @foreach (var product in Model.Where(p => !p.IsActive))
+                        {
+                            <div class="col-12">
+                                <div class="d-flex align-items-start p-3 border rounded-3 opacity-75">
+                                    <div class="flex-grow-1 me-3">
+                                        <h6 class="mb-1">@product.Title <span class="badge bg-secondary text-dark ms-2">Inactive</span></h6>
+                                        <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                            <!-- CATEGORY BADGE -->
+                                        <p class="text-secondary mb-1" style="font-size: 0.85rem; font-weight: 600;">
+                                            <span class="badge bg-light text-secondary">@product.Category</span>
+                                        <p>
+                                            @if (!string.IsNullOrEmpty(product.Description))
+                                            {
+                                                @(product.Description.Length > 80 ? product.Description.Substring(0, 80) + "..." : product.Description)
+                                            }
+                                        </p>
+                                    </div>
+
+                                    <!--Add role later-->
+                                    <div class="d-flex flex-column gap-2 me-2">
+                                        <a asp-action="Edit" asp-route-id="@product.Id" class="btn-edit" aria-label="Edit">
+                                            <i class="fas fa-pen"></i>
+                                        </a>
+                                        <form asp-action="Delete" asp-route-id="@product.Id" method="post"
+                                              onsubmit="return confirm('Delete this product?');">
+                                            <button type="submit" class="btn-delete" aria-label="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <div style="width: 80px; height: 80px; flex-shrink: 0;">
+                                        @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                        {
+                                            <img src="@product.ImageUrl"
+                                                 alt="@product.Title"
+                                                 class="w-100 h-100 rounded-2"
+                                                 style="object-fit: cover;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-light w-100 h-100 rounded-2"></div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+<!-- Product Detail Modal -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Product Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img id="modalImage" src="" class="img-fluid rounded-3" alt="Product Image" />
+                    </div>
+                    <div class="col-md-6">
+                        <h4 id="modalTitle" class="fw-bold mb-2"></h4>
+                        <p class="text-secondary mb-1"><strong>Category:</strong> <span id="modalCategory"></span></p>
+                        <p class="text-danger fw-bold fs-4 mb-3"><strong>$<span id="modalPrice"></span></strong></p>
+                        <p id="modalDescription" class="mb-4"></p>
+                        <a id="modalFoodPandaLink" href="#" target="_blank" class="btn btn-success w-100">
+                            <i class="fas fa-shopping-cart me-2"></i>Order on FoodPanda
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <style>
+        /* Menu Item Container */
+        .menu-item {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+            .menu-item:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+            }
+
+        /* Add Button */
+        .btn-add {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f0fdf4;
+            color: #16a34a;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 2px solid #dcfce7;
+        }
+
+            .btn-add:hover {
+                background: #dcfce7;
+                transform: scale(1.1) rotate(90deg);
+                box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+            }
+
+        /* Edit Button */
+        .btn-edit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ecfeff;
+            color: #0891b2;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 2px solid #ccfbfe;
+        }
+
+            .btn-edit:hover {
+                background: #ccfbfe;
+                transform: scale(1.1);
+                box-shadow: 0 4px 12px rgba(8, 145, 178, 0.2);
+            }
+
+        /* Delete Button */
+        .btn-delete {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #fef2f2;
+            color: #dc2626;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 2px solid #fecaca;
+            cursor: pointer;
+            padding: 0;
+        }
+
+            .btn-delete:hover {
+                background: #fecaca;
+                transform: scale(1.1);
+                box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+            }
+
+        /* Image hover zoom */
+        .product-image img {
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.4, 1);
+        }
+
+        .menu-item:hover .product-image img {
+            transform: scale(1.03);
+        }
+
+        /* Initial load fade-in */
+        .animate__fadeInUp {
+            animation-duration: 0.6s;
+            animation-fill-mode: both;
+        }
+        
+    </style>
+
+    <script>
+        // Open product detail modal on card click
+        document.addEventListener('DOMContentLoaded', function () {
+            const items = document.querySelectorAll('.menu-item');
+            items.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                    item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+
+                    // Add click handler
+                    item.addEventListener('click', function (e) {
+                        // Don't trigger if clicked on buttons or links
+                        if (e.target.closest('.btn') || e.target.closest('form')) {
+                            return;
+                        }
+
+                        // Get product data from the card
+                        const title = item.querySelector('h5').innerText;
+                        const price = item.querySelector('.text-danger').innerText.replace('$', '');
+                        const category = item.querySelector('.badge').innerText;
+                        const description = item.querySelector('.text-muted').innerText;
+                        const imageUrl = item.querySelector('img').src;
+                        const foodPandaUrl = item.querySelector('.btn-add')?.href || '#';
+
+                        // Populate modal
+                        document.getElementById('modalTitle').innerText = title;
+                        document.getElementById('modalPrice').innerText = price;
+                        document.getElementById('modalCategory').innerText = category;
+                        document.getElementById('modalDescription').innerText = description;
+                        document.getElementById('modalImage').src = imageUrl;
+                        document.getElementById('modalFoodPandaLink').href = foodPandaUrl;
+
+                        // Show modal
+                        const modal = new bootstrap.Modal(document.getElementById('productModal'));
+                        modal.show();
+                    });
+                }, 100 + (index * 80));
+            });
+        });
+    </script>
+}

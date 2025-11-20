@@ -1,0 +1,145 @@
+﻿@model NineCafeProductAppV1.Models.ProductViewModel
+
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="fas fa-edit me-2"></i>Edit Product</h3>
+                </div>
+
+                <div class="card-body p-4">
+                    <form asp-action="Edit" asp-controller="Products" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+
+                        <!-- Hidden ID -->
+                        <input type="hidden" asp-for="Id" />
+
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label fw-bold">Product Name</label>
+                            <input asp-for="Title" class="form-control form-control-lg" placeholder="e.g., Iced Latte" />
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="mb-3">
+                            <label asp-for="Price" class="form-label fw-bold">Price (USD)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="Price" class="form-control form-control-lg" type="text" placeholder="1.25" />
+                            </div>
+                            <span asp-validation-for="Price" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label fw-bold">Description</label>
+                            <textarea asp-for="Description" class="form-control" rows="4" placeholder="Describe your product...">@Model.Description</textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="mb-3">
+                            <label asp-for="Category" class="form-label fw-bold">Category</label>
+                            <select asp-for="Category" class="form-select form-select-lg">
+                                <option value="">-- Select Category --</option>
+                                <option value="Coconut Coffee">Coconut Coffee</option>
+                                <option value="Bubble Tea">Bubble Tea</option>
+                                <option value="Hot Espresso">Hot Espresso</option>
+                                <option value="Iced Espresso">Iced Espresso</option>
+                                <option value="Smoothie">Smoothie</option>
+                            </select>
+                            <span asp-validation-for="Category" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Current Image Preview (Optional but helpful) -->
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Current Image</label>
+                                <div class="bg-light d-flex justify-content-center align-items-center p-2 rounded-2" style="min-height: 120px;">
+                                    <img src="@Model.ImageUrl" alt="Current product" class="img-fluid" style="max-height: 100px; object-fit: contain;" />
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Image Source -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Update Image (optional)</label>
+                            <div class="btn-group w-100 mb-3" role="group">
+                                <input type="radio" class="btn-check" name="imageSource" id="useUrl" checked onchange="toggleImageInput()" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="useUrl">From URL</label>
+
+                                <input type="radio" class="btn-check" name="imageSource" id="useFile" onchange="toggleImageInput()" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="useFile">Upload File</label>
+                            </div>
+
+                            <!-- URL Input -->
+                            <div id="urlSection">
+                                <label asp-for="ImageUrl" class="form-label">New Image URL</label>
+                                <input asp-for="ImageUrl" class="form-control" placeholder="https://example.com/new-image.jpg" />
+                                <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                            </div>
+
+                            <!-- File Input -->
+                            <div id="fileSection" style="display:none;">
+                                <label asp-for="ImageFile" class="form-label">Select new image file</label>
+                                <input asp-for="ImageFile" class="form-control" type="file" accept="image/*" />
+                                <span asp-validation-for="ImageFile" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Status</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" asp-for="IsActive" id="isActiveSwitch" />
+                                <label class="form-check-label" for="isActiveSwitch">Active</label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success btn-lg flex-grow-1">
+                                <i class="fas fa-save me-2"></i>Update Product
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-arrow-left me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function toggleImageInput() {
+            const urlSection = document.getElementById('urlSection');
+            const fileSection = document.getElementById('fileSection');
+            const useUrl = document.getElementById('useUrl').checked;
+
+            if (useUrl) {
+                urlSection.style.display = 'block';
+                fileSection.style.display = 'none';
+            } else {
+                urlSection.style.display = 'none';
+                fileSection.style.display = 'block';
+            }
+        }
+
+        // Optional: Auto-check switch based on model
+        document.addEventListener('DOMContentLoaded', function () {
+            const isActive = @Json.Serialize(Model.IsActive);
+            document.getElementById('isActiveSwitch').checked = isActive;
+        });
+    </script>
+}

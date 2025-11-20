@@ -1,0 +1,118 @@
+﻿@using NineCafeProductAppV1.Constants;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - NineCafé​</title>
+    <script type="importmap"></script>
+    <script src="https://kit.fontawesome.com/0bf7fd8e93.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/NineCafeProductAppV1.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Products" asp-action="Index">
+                   <i class="fa-solid fa-mug-saucer"></i>
+                    Nine Café
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!--HERE on 17-10-2025-->
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Products" 
+                                && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"
+                                asp-area="" asp-controller="Products" asp-action="Index">
+                                Products
+                            </a>
+                        </li>
+                        @if (User.IsInRole(Roles.ADMIN))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Products"
+                                                                   && ViewContext.RouteData.Values["Action"]?.ToString() == "Create" ? "active" : "")"
+                                    asp-area="" asp-controller="Products" asp-action="Create">
+                                    Create
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+
+                    <!--AUTH Section-->
+                    <ul class="navbar-nav ms-auto">
+                        @if(User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user me-1"></i> @User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-area="Identity" asp-page="/Account/Logout"
+                                              asp-route-returnUrl="@Url.Action("Index", "Products")"
+                                              method="post">
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="fas fa-sign-out-alt me-2"></i>Log out
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Login
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">
+                                    <i class="fas fa-user-plus me-1"></i>Register
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center py-1">
+            <div>
+                &copy; 2025 - Nine Café
+            </div>
+            <div class="social-icons d-flex gap-3 align-items-center mt-2 mt-md-0">
+                <a href="https://www.facebook.com/ninecafe.kh" target="_blank" class="social-icon text-muted">
+                    <i class="fa-brands fa-facebook fa-lg"></i>
+                </a>
+                <a href="https://t.me/nine_cafe" target="_blank" class="social-icon text-muted">
+                    <i class="fa-brands fa-telegram fa-lg"></i>
+                </a>
+                <a href="https://maps.app.goo.gl/TApc91SKG5NWHy5U6" target="_blank" class="social-icon text-muted">
+                    <i class="fa-solid fa-location-dot fa-lg"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
